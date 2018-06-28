@@ -5,7 +5,7 @@
     <link rel="stylesheet" href="./css/default.css">
   </head>
   <body>
-    <div class="pages">
+    <div class="page">
       <aside> 
         <div class='newSong'>
           新建歌曲
@@ -33,15 +33,30 @@
         <div id="uploadStatus"></div>
       </aside>
       <main>
+      <h1>新建歌曲</h1>
       <form class='form' action="">
-        <div class='row'><label>歌名<input type=""></label></div>
-        <div class='row'><label>歌手<input type=""></label></div>
-        <div class='row'><label>外链<input type=""></label></div>
-        <div class="row"><button type="submit">保存</button></div>
+        <div class='row'>
+          <label>
+            歌名
+          </label>
+          <input type="text">
+        </div>
+        <div class='row'>
+          <label>歌手
+          </label>
+          <input type="text">
+        </div>
+        <div class='row'>
+          <label>外链
+          </label>
+          <input type="text">
+        </div>
+        <div class="row actions"><button type="submit" >保存</button></div>
       </form>
       </main>
     </div>
     
+  
     <script src="../node_modules/leancloud-storage/dist/av-min.js"></script>
     <script>
       // init LeanCloud API
