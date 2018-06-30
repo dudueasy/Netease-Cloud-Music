@@ -2,9 +2,7 @@
   let view = {
     el: '.uploadArea',
     find(selector){
-      let element = $(this.el).find(selector)[0]
-      console.log(element)
-      return element 
+      return $(this.el).find(selector)[0]
     }
   }
 
@@ -14,7 +12,6 @@
   let controller = {
     init(view, model){
       this.view = view
-      console.log(this.view)
       this.model = model
       this.initQiniu()
     },
@@ -57,7 +54,10 @@
 
             // 获取上传成功后的文件的url, 也就是七牛的外链
             var sourceLink = `http://${ domain }/${ encodeURIComponent(response.key)}`  
-            console.log(sourceLink)
+            let songInfo= { url : sourceLink , name: response.key}
+
+            // 向事件中心发布 upload 事件
+            window.eventHub.emit('upload',songInfo)
           },
           'Error': function(up, err, errTip) {
             //上传出错时,处理相关的事情
