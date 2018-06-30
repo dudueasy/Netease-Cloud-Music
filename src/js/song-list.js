@@ -74,7 +74,10 @@
       $(this.view.el).on('click', 'li', (e)=>{
         this.view.activeItem(e.currentTarget)
         let songId = $(e.currentTarget).attr('data-song-id')
-        window.eventHub.emit('select',{id:songId})
+        let songInfo = this.model.data.songs.filter(song => song.id === songId)[0]
+
+        //深拷贝 songInfo 变量以避免传递引用的潜在问题 (变量在一个模块中被修改后, 将会影响到依赖它的另一个模块)
+        window.eventHub.emit('select',JSON.parse(JSON.stringify(songInfo)))
       })
     },
     bindEventHub(){

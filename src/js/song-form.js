@@ -86,10 +86,13 @@
       this.view.render(this.model.data)
       this.bindEvents()
       window.eventHub.on('upload', (data)=>{
-        console.log('song-form模块得到了数据')
-        console.log(data)
         this.view.render(data)
-      })
+      }),
+        window.eventHub.on('select',(data)=>{
+          console.log('songForm receive: ', data)
+          this.model.data = data
+          this.view.render(this.model.data)
+        })
     },
     bindEvents(){
       this.view.$el.on('submit','form',(e)=>{
@@ -110,13 +113,12 @@
             let object  = JSON.parse(string)
 
             // 向事件中心发布'create' 事件
-             window.eventHub.emit('create', object)
+            window.eventHub.emit('create', object)
           })
       })
     }
   }
 
   controller.init(model, view)
-  console.log(`${view.el} is rendered by song-form.js`)
 }
 
