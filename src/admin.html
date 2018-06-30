@@ -3,6 +3,7 @@
   <head>
     <meta charset="UTF-8"> <title>Administration</title>
     <link rel="stylesheet" href="./css/default.css">
+    <link rel="shortcut icon" href="favicon.ico" />
     <script src="../node_modules/jquery/dist/jquery.min.js"></script>
   </head>
   <body>
@@ -27,19 +28,12 @@
     
   
     <script src="../node_modules/leancloud-storage/dist/av-min.js"></script>
-    <script>
-      // init LeanCloud API
-      var APP_ID = '5aFB8rFzI89casQfQlXMYyUD-gzGzoHsz';
-var APP_KEY = 'soVeyWExsNeEF7wYavb0epvP';
+    <script src='./js/initializers/av.js'></script>
 
-AV.init({
-  appId: APP_ID,
-  appKey: APP_KEY
-});
-    </script>
     <script src="../vendors/moxie.min.js"></script>
     <script src='../node_modules/plupload/js/plupload.min.js'></script>
     <script src='../node_modules/qiniu-js/dist/qiniu.min.js'> </script>
+    <script src="./js/event-hub.js"></script>
     <script src='./js/song-form.js'></script>
     <script src='./js/new-song.js'></script>
     <script src='./js/song-list.js'></script>
