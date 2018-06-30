@@ -2,7 +2,7 @@
   let view = {
     el:'aside .newSong',
     template:`
-      新建歌曲
+    新建歌曲
     `,
     render(data){
       $(this.el).html(this.template)
@@ -22,9 +22,17 @@
       window.eventHub.on('upload', (data)=>{
         this.active()
       })
+      window.eventHub.on('select',(data)=>{
+        console.log(data)
+        this.deactive()
+      })
     },
     active(){
       $(this.view.el).addClass('active')
+    },
+    deactive(){
+      console.log('deactive is called')
+      $(this.view.el).removeClass('active')
     }
   }
 

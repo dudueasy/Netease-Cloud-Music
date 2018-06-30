@@ -5,11 +5,12 @@
     <ul class='songList'>
     </ul>
     `,
+    // render 的参数来源是 model.data, model.data 的数据来源是 LeanCloud 数据库
     render(data){
       let {songs} = data
       console.log(songs)
       // generate <li> according to  data.songs[index]
-      let liList = songs.map((song)=> $('<li></li>').text(song.name) )
+      let liList = songs.map((song)=> $('<li></li>').text(song.name).attr('data-song-id',song.id))
 
       // empty <li> container (ul)
       let $el = $(this.el)
@@ -34,6 +35,7 @@
   let model = {
     data: {
       songs: [
+        //example: {id:'', name:'', singer:'', url:''}
       ]
     },
     find(){
@@ -58,19 +60,22 @@
       this.bindEventHub()
       this.bindEvents()
       this.getAllSongs()
-
     },
     getAllSongs(){
       return this.model.find().then(()=>{
-        this.view.render(this.model.data)
+        return this.view.render(this.model.data)
+      }).then(()=>{
+        console.log('this.model.data')
+        console.log(this.model.data)
       })
     }
     ,
     bindEvents(){
       $(this.view.el).on('click', 'li', (e)=>{
-      this.view.activeItem(e.currentTarget)
+        this.view.activeItem(e.currentTarget)
+        let songId = $(e.currentTarget).attr('data-song-id')
+        window.eventHub.emit('select',{id:songId})
       })
-
     },
     bindEventHub(){
       window.eventHub.on('upload', ()=>{
@@ -83,9 +88,6 @@
       })
     }
   }
-
   controller.init(view, model)
   console.log(`${view.el} is rendered by song-list.js`)
-
-
 }
