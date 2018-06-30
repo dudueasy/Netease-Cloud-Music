@@ -19,7 +19,7 @@
       liList.map((liElement)=>{
         $el.find('ul').append(liElement)
       })
-      
+
     },
     clearActive(){
       $(this.el).find('.active').removeClass('active')
@@ -29,17 +29,32 @@
   let model = {
     data: {
       songs: [
-        // {id: 1, name:'1'}, {id: 2, name:'2'}
       ]
-
+    },
+    find(){
+      var query = new AV.Query('Song')
+      return query.find().then((songs)=>{
+        console.log(songs)
+        this.data.songs = songs.map((song)=>{
+          return {id:song.id, ...song.attributes}
+        })
+        return songs
+      }, function (error) {
+        console.log('something wrong')
+      })
     }
   }
-  
+
   let controller = {
     init(view, model){
       this.view = view
       this.model = model
       this.view.render(this.model.data)
+
+      this.model.find().then(()=>{
+        this.view.render(this.model.data)
+      })
+
       window.eventHub.on('upload', ()=>{
         this.view.clearActive()
       })
