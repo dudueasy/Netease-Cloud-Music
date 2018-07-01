@@ -57,8 +57,8 @@
             let songInfo= { url : sourceLink , name: response.key}
             console.log(songInfo)
 
-            // 向事件中心发布 upload 事件
-            window.eventHub.emit('upload',songInfo)
+            // 向事件中心发布 new 事件
+            window.eventHub.emit('new',songInfo)
           },
           'Error': function(up, err, errTip) {
             //上传出错时,处理相关的事情

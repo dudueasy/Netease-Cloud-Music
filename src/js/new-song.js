@@ -10,6 +10,9 @@
   }
 
   let model = {
+    data:{
+
+    }
 
   }
 
@@ -23,12 +26,13 @@
       this.bindEventHub()
     },
     bindEvents(){
-      // 'click' 事件的回调调用 this.active 时不传数据, 清空 songForm 的model数据
-      $(this.view.el).on('click',this.active.bind(this))
+      // 'click' 事件的回调
+      $(this.view.el).on('click',() =>{window.eventHub.emit('new',this.model.data)})
     },
     bindEventHub(){
-      window.eventHub.on('upload', (data)=>{
-        this.active(data)
+      window.eventHub.on('new', (data)=>{
+        console.log('new event is emited')
+        this.active()
       })
       window.eventHub.on('select',(data)=>{
         console.log(data)
@@ -36,10 +40,11 @@
       })
     }
     ,
-    active(data){
+    active(){
+      console.log('active() is called')
       $(this.view.el).addClass('active')
-      window.eventHub.emit('new',data)
-    },
+    }
+    ,
     deactive(){
       console.log('deactive is called')
       $(this.view.el).removeClass('active')

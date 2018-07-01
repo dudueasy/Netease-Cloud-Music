@@ -119,17 +119,18 @@
       })
     },
     bindEventHub(){
-      window.eventHub.on('upload', (data)=>{
-        console.log(data)
-        this.view.render(data)
-      })
+      // 'select' 事件在songList模块上的li被点击时触发.
       window.eventHub.on('select',(data)=>{
         console.log('songForm receive: ', data)
         this.model.data = data
         this.view.render(this.model.data)
       })
       window.eventHub.on('new',(data)=>{
-        this.model.data = data || {}
+        if(this.model.data.id) { 
+          this.model.data = { name:'', singer:'', url:'', id:'' }
+        }else{
+          Object.assign( this.model.data, data ) 
+        }
         this.view.render(this.model.data)
       })
     }

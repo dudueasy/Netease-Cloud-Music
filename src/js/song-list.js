@@ -81,7 +81,7 @@
       })
     },
     bindEventHub(){
-      window.eventHub.on('upload', ()=>{
+      window.eventHub.on('new', ()=>{
         this.view.clearActive()
       })
       window.eventHub.on('create',(data)=>{
