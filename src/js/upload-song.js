@@ -55,6 +55,7 @@
             // 获取上传成功后的文件的url, 也就是七牛的外链
             var sourceLink = `http://${ domain }/${ encodeURIComponent(response.key)}`  
             let songInfo= { url : sourceLink , name: response.key}
+            console.log(songInfo)
 
             // 向事件中心发布 upload 事件
             window.eventHub.emit('upload',songInfo)

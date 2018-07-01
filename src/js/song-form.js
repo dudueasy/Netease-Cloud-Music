@@ -5,7 +5,6 @@
       this.$el = $(this.el)
     },
     template: `
-      <h1>新建歌曲</h1>
       <form class='form' action="">
         <div class='row'>
           <label>
@@ -31,12 +30,21 @@
       let html = this.template
       window.template = this.template
 
+      console.log('this is render() received data: ', data)
+
       // 根据接收到的参数来替换模板中的占位符
       placeholders.map((string)=>{
         replacement = data[string] || ''
         html = html.replace(`__${string}__`, replacement)
       })
       $(this.el).html(html)
+
+      // 用于生成 songForm 模块的 <h1> , <h1>.text 取决于data (也就是model.data) 中是否有 id 字段 (该字段仅仅能够从songList 发布的 select 事件获得.)
+      if(data.id){
+        $(this.el).prepend('<h1>编辑歌曲</h1>' )
+      }else{
+        $(this.el).prepend('<h1>新建歌曲</h1>' )
+      }
     },
     reset(){
       this.render({})
@@ -54,15 +62,15 @@
     create(data){
       // define leanCloud database table(Class) to use.
       let song = AV.Object.extend('Song');
-      
+
       // 新建对象(数据行)
       song = new song();
-     
+
       // 定义字段的值 
       song.set('name', data.name);
       song.set('singer', data.singer);
       song.set('url', data.url);
-     
+
       // 在leanCloud 的回调函数中, 将响应对象的 attributes(数据库保存的信息) 分别赋值给 model.data
       // 返回 leanCloud 的数据对象 (Promise), 用于给 this.model.create() 提供后续的.then()操作
       return song.save().then(
@@ -85,14 +93,7 @@
       this.view.init()
       this.view.render(this.model.data)
       this.bindEvents()
-      window.eventHub.on('upload', (data)=>{
-        this.view.render(data)
-      }),
-        window.eventHub.on('select',(data)=>{
-          console.log('songForm receive: ', data)
-          this.model.data = data
-          this.view.render(this.model.data)
-        })
+      this.bindEventHub()
     },
     bindEvents(){
       this.view.$el.on('submit','form',(e)=>{
@@ -115,6 +116,21 @@
             // 向事件中心发布'create' 事件
             window.eventHub.emit('create', object)
           })
+      })
+    },
+    bindEventHub(){
+      window.eventHub.on('upload', (data)=>{
+        console.log(data)
+        this.view.render(data)
+      })
+      window.eventHub.on('select',(data)=>{
+        console.log('songForm receive: ', data)
+        this.model.data = data
+        this.view.render(this.model.data)
+      })
+      window.eventHub.on('new',(data)=>{
+        this.model.data = data || {}
+        this.view.render(this.model.data)
       })
     }
   }
