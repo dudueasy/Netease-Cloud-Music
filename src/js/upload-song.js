@@ -42,11 +42,13 @@
           },
           'BeforeUpload': function(up, file) {
             // 每个文件上传前,处理相关的事情
+            window.eventHub.emit('beforeUpload')
           },
           'UploadProgress': function(up, file) {
             uploadStatus.textContent = '文件上传中'
           },
           'FileUploaded': function(up, file, info) {
+            window.eventHub.emit('afterUpload')
             uploadStatus.textContent = '文件上传完成'
 
             var domain = up.getOption('domain');
