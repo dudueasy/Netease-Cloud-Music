@@ -89,8 +89,23 @@
         this.model.data.songs.push(data) 
         this.view.render(this.model.data)
       })
-      window.eventHub.on('new',()=>{
-        this.view.clearActive()
+      window.eventHub.on('update',(data)=>{
+        console.log('update')
+        console.log('newdata', data)
+        let songs = this.model.data.songs
+
+        for(let i =0; i<songs.length; i++){
+          if(songs[i].id === data.id){
+            songs[i] = data
+          }
+        }
+
+        console.log('songs after update: ',songs)
+        // 更新this.model.data.songs
+        
+        this.model.data.songs = songs      
+
+        this.view.render(this.model.data)
       })
     }
   }
