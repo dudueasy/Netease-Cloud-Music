@@ -176,6 +176,7 @@
         this.view.render(this.model.data)
       })
       window.eventHub.on('new',(data)=>{
+        console.log('new event is triggered')
         if(this.model.data.id) { 
           this.model.data = { name:'', singer:'', url:'', id:'' }
         }else{
