@@ -179,7 +179,7 @@
         if(this.model.data.id) { 
           this.model.data = { name:'', singer:'', url:'', id:'' }
         }else{
-          Object.assign( this.model.data, ...data ) 
+          Object.assign( this.model.data, { ...data } ) 
         }
         this.view.render(this.model.data)
       })

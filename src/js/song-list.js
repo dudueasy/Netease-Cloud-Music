@@ -7,10 +7,20 @@
     `,
     // render 的参数来源是 model.data, model.data 的数据来源是 LeanCloud 数据库
     render(data){
-      let {songs} = data
-      console.log(songs)
+      let {songs, selectedSongId} = data
       // generate <li> according to  data.songs[index]
-      let liList = songs.map((song)=> $('<li></li>').text(song.name).attr('data-song-id',song.id))
+      
+      console.log('songs:',songs)
+
+      let liList = songs.map((song)=> { 
+        let $li =   $('<li></li>').text(song.name).attr('data-song-id',song.id)
+        if(song.id === data.selectedSongId){
+          $li.addClass('active')
+        }
+        return $li
+      }) 
+
+      console.log('liList: ',liList)
 
       // empty <li> container (ul)
       let $el = $(this.el)
@@ -22,11 +32,6 @@
       })
 
     },
-    activeItem(li){
-      let $li = $(li)
-      $li.addClass('active').
-        siblings('.active').removeClass('active')
-    },
     clearActive(){
       $(this.el).find('.active').removeClass('active')
     }
@@ -36,7 +41,8 @@
     data: {
       songs: [
         //example: {id:'', name:'', singer:'', url:''}
-      ]
+      ],
+      selectedSongId:''
     },
     find(){
       var query = new AV.Query('Song')
@@ -72,10 +78,13 @@
     ,
     bindEvents(){
       $(this.view.el).on('click', 'li', (e)=>{
-        this.view.activeItem(e.currentTarget)
         let songId = $(e.currentTarget).attr('data-song-id')
-        let songInfo = this.model.data.songs.filter(song => song.id === songId)[0]
+        this.model.data.selectedSongId = songId
+        this.view.render(this.model.data)
 
+        
+        // 获取被点击歌曲的信息, 并发布 select 事件
+        let songInfo = this.model.data.songs.filter(song => song.id === songId)[0]
         //深拷贝 songInfo 变量以避免传递引用的潜在问题 (变量在一个模块中被修改后, 将会影响到依赖它的另一个模块)
         window.eventHub.emit('select',JSON.parse(JSON.stringify(songInfo)))
       })
@@ -99,12 +108,8 @@
             songs[i] = data
           }
         }
-
-        console.log('songs after update: ',songs)
         // 更新this.model.data.songs
-        
         this.model.data.songs = songs      
-
         this.view.render(this.model.data)
       })
     }
