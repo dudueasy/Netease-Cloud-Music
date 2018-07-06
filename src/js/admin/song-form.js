@@ -22,11 +22,16 @@
           </label>
           <input type="text" name='url' value='__url__'>
         </div>
+        <div class='row'>
+          <label>封面
+          </label>
+          <input type="text" name='cover' value='__cover__'>
+        </div>
         <div class="row actions"><button type="submit" >保存</button></div>
       </form>
     `,
     render(data={}){
-      let placeholders = ['name','url', 'singer','id']
+      let placeholders = ['name','url', 'singer','id', 'cover']
       let html = this.template
       window.template = this.template
 
@@ -56,6 +61,7 @@
       name:'',
       singer:'',
       url:'',
+      cover:'',
       id:''
     },
     // create() 用于向leanCloud 新建数据
@@ -70,6 +76,7 @@
       song.set('name', data.name);
       song.set('singer', data.singer);
       song.set('url', data.url);
+      song.set('cover', data.cover)
 
       // 在leanCloud 的回调函数中, 将响应对象的 attributes(数据库保存的信息) 分别赋值给 model.data
       // 返回 leanCloud 的数据对象 (Promise), 用于给 this.model.create() 提供后续的.then()操作
@@ -91,7 +98,7 @@
       var song = AV.Object.createWithoutData('Song', data.id);
 
       // 遍历data对象的 key 来修改每一个属性
-      // data = { name:'', singer:'', url:'', id:'' }
+      // data = { name:'', singer:'', url:'', id:'' , cover:''}
       Object.keys(data).map((key)=>{song.set(key, data[key])})
 
       return song.save().then(
@@ -113,7 +120,7 @@
       this.bindEventHub()
     },
     getSongData(){
-      let needs = ['name', 'singer','url']
+      let needs = ['name', 'singer','url', 'cover']
       let songData = {}
       needs.map((string)=>{
         songData[string] = this.view.$el.find(`input[name=${string}]`).val()
@@ -175,10 +182,12 @@
         this.model.data = data
         this.view.render(this.model.data)
       })
+      // 'new' 事件在用户点击了 newSong 模块后触发. 用来定义新建歌曲按钮对歌曲详情编辑状态的逻辑(如果正在创建新歌曲, 那么无反应. 如果正在编辑已有歌曲, 那么点击后songForm表单情况, 进入新建歌曲状态)
       window.eventHub.on('new',(data)=>{
         console.log('new event is triggered')
+        
         if(this.model.data.id) { 
-          this.model.data = { name:'', singer:'', url:'', id:'' }
+          this.model.data = { name:'', singer:'', url:'', id:'', cover:'' }
         }else{
           Object.assign( this.model.data, { ...data } ) 
         }
