@@ -7,7 +7,7 @@
     }
     ,
     render(songData){
-      this.$el.css({'background-image': `url(${ songData .cover})`})
+      this.$el.find('.background').css({'background-image': `url(${ songData .cover})`})
       this.$el.find('img.cover').attr('src',songData.cover)
       let audio = this.$el.find('audio').attr('src', songData.url)[0]
 
