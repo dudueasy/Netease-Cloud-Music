@@ -23,9 +23,14 @@
     <input type="text" name='url' value='__url__'>
     </div>
     <div class='row'>
-    <label>封面
+    <label>专辑封面
     </label>
     <input type="text" name='cover' value='__cover__'>
+    </div>
+    <div class='row'>
+    <label>专辑背景
+    </label>
+    <input type="text" name='background' value='__background__'>
     </div>
     <div class='row'>
     <label>歌词
@@ -36,7 +41,7 @@
     </form>
     `,
     render(data={}){
-      let placeholders = ['name','url', 'singer','id', 'cover', 'lyrics']
+      let placeholders = ['name','url', 'singer','id', 'cover', 'lyrics', 'background']
       let html = this.template
       window.template = this.template
 
@@ -66,6 +71,7 @@
       singer:'',
       url:'',
       cover:'',
+      background:'',
       lyrics:'',
       id:''
     },
@@ -82,6 +88,8 @@
       song.set('singer', data.singer);
       song.set('url', data.url);
       song.set('cover', data.cover)
+
+      song.set('background', data.background)
       song.set('lyrics', data.lyrics)
 
       // 在leanCloud 的回调函数中, 将响应对象的 attributes(数据库保存的信息) 分别赋值给 model.data
@@ -104,14 +112,14 @@
       var song = AV.Object.createWithoutData('Song', data.id);
 
       // 遍历data对象的 key 来修改每一个属性
-      // data = { name:'', singer:'', url:'', id:'' , cover:'', lyrics:''}
+      // data = { name:'', singer:'', url:'', id:'' , cover:'', background:'', lyrics:''}
       Object.keys(data).map((key)=>{song.set(key, data[key])})
 
       return song.save().then(
         (newSong)=>{
-        let {id, attributes } = newSong
-        Object.assign(this.data, { id, ...attributes })
-      })
+          let {id, attributes } = newSong
+          Object.assign(this.data, { id, ...attributes })
+        })
     }
 
   }
@@ -126,7 +134,7 @@
       this.bindEventHub()
     },
     getSongData(){
-      let needs = ['name', 'singer','url', 'cover', 'lyrics']
+      let needs = ['name', 'singer','url', 'cover', 'lyrics', 'background']
       let songData = {}
       needs.map((string)=>{
         songData[string] = this.view.$el.find(`[name=${string}]`).val()
@@ -190,9 +198,9 @@
       // 'new' 事件在用户点击了 newSong 模块后触发. 用来定义新建歌曲按钮对歌曲详情编辑状态的逻辑(如果正在创建新歌曲, 那么无反应. 如果正在编辑已有歌曲, 那么点击后songForm表单情况, 进入新建歌曲状态)
       window.eventHub.on('new',(data)=>{
         console.log('new event is triggered')
-        
+
         if(this.model.data.id) { 
-          this.model.data = { name:'', singer:'', url:'', id:'', cover:'',lyrics:'' }
+          this.model.data = { name:'', singer:'', url:'', id:'', cover:'',lyrics:'',background:'' }
         }else{
           Object.assign( this.model.data, { ...data } ) 
         }
