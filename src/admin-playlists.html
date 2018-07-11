@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>歌单管理页面</title>
+    <link rel="stylesheet" href="./css/default.css">
+</head>
+<body>
+
+<div class="playlistForm-wrapper">
+    <h1>创建歌单</h1>
+    <form class="playlistForm">
+        <div class="row">
+            <label>歌单名
+                <input type="text" name="name">
+            </label>
+        </div>
+        <div class="row">
+            <label>简介
+                <textarea name="summary" id="" cols="10" rows="10">
+
+                </textarea>
+            </label>
+        </div>
+        <div class="row">
+            <button type="submit">
+                创建
+            </button>
+        </div>
+
+    </form>
+
+</div>
+
+
+<!--依赖项-->
+<script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../node_modules/leancloud-storage/dist/av-min.js"></script>
+<script src='./js/admin/initializers/av.js'></script>
+
+<script src='../node_modules/qiniu-js/dist/qiniu.min.js'></script>
+
+<script>
+    {
+        let view = {
+            el: '.playlistForm-wrapper',
+            init() {
+                this.$el = $(this.el)
+                this.$form = $(this.el).find('form')
+            },
+        }
+        let model = {
+            data:{},
+            // model.create 创建一个 playlist 数据行
+            create(data) {
+                let Playlist = AV.Object.extend('Playlist');
+                // 新建对象(数据行)
+                playlist = new Playlist();
+                // 定义字段的值
+
+                let keysArray = ['name', 'summary']
+
+                keysArray.forEach((key) => {
+                    playlist.set(key, data[key]);
+                })
+
+                // 在leanCloud 的回调函数中, 将响应对象的 attributes(数据库保存的信息) 分别赋值给 model.data
+                // 返回 leanCloud 的数据对象 (Promise), 用于给 this.model.create() 提供后续的.then()操作
+                return playlist.save()
+            }
+        }
+        let controller = {
+            init(view, model) {
+                this.view = view
+                this.view.init()
+                this.model = model
+                this.bindEvents()
+            }
+            ,
+            bindEvents() {
+                this.view.$el.on('submit', 'form', (e) => {
+                    e.preventDefault()
+                    let form = this.view.$form[0]
+                    let data = {}
+                    let keys = ['name', 'summary']
+                    keys.reduce((previousData, item) => {
+                        previousData[item] = form[item].value.trim()
+                        return previousData
+                    }, data)
+
+
+                    this.model.create(data).then(
+                        (newPlaylist) => {
+                            let {id, attributes} = newPlaylist
+                            Object.assign(this.model.data, {id, ...attributes})
+                            console.log('this.model.data: ', this.model.data)
+                        },
+                        (error) => {
+                            console.error(error);
+                        }
+                    )
+                })
+
+            }
+        }
+        controller.init(view, model)
+    }
+
+
+    window.onload = () => {
+
+//        savePlaylistData()
+
+
+    }
+</script>
+</body>
+</html>

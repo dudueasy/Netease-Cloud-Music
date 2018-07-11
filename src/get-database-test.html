@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+<script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../node_modules/leancloud-storage/dist/av-min.js"></script>
+<script src='./js/admin/initializers/av.js'></script>
+<script>
+
+    let algebraId = '5b457318ee920a003b35cd5b'
+    getStudentByCourseId(algebraId)
+
+
+    function getStudentByCourseId(Id) {
+        // get course object from collection
+        let courseLinearAlgebra = AV.Object.createWithoutData("Course", Id)
+
+        // create a query object for studentCourseMap
+        let query = new AV.Query('studentCourseMap')
+
+        // define query condition, define pointer Object
+        query.equalTo('course', courseLinearAlgebra)
+
+        // 在 query 对象上使用 include 来拉取 pointer(外键) 指向的数据
+        query.include('student')
+
+        // do the query (send request)
+        query.find().then((studentCourseMap) => {
+            console.log('data from leanCloud:', studentCourseMap)
+
+            studentCourseMap.forEach((object) => {
+                let studentName = object.get('student').get('name')
+
+                console.log('参加了代数课程的学生: ', studentName)
+            })
+        })
+    }
+
+</script>
+</body>
+</html>

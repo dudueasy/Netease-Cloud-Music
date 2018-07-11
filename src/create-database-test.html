@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+</head>
+<body>
+
+<!--初始化 leanCloud-->
+<script src="../node_modules/jquery/dist/jquery.min.js"></script>
+<script src="../node_modules/leancloud-storage/dist/av-min.js"></script>
+<script src='./js/admin/initializers/av.js'></script>
+
+
+<script>
+
+    // new AV.Object return a document
+    // create a document in Student collection
+    let studentTom = new AV.Object('Student')
+    studentTom.set('name', 'apolo2')
+
+    // for create a document in Course collection first time
+    //    let courseLinearAlgebra = new AV.Object('Course')
+    //    courseLinearAlgebra.set('name', '线性代数')
+
+    // for get course obj from course collection afterwards
+    let courseLinearAlgebra = AV.Object.createWithoutData('Course', '5b457318ee920a003b35cd5b')
+
+
+    //create a document in studentCourseMap
+    let studentCourseMapTom = new AV.Object('studentCourseMap')
+
+    // set a document to a column as foreign key
+    studentCourseMapTom.set('student', studentTom)
+    studentCourseMapTom.set('course', courseLinearAlgebra)
+    studentCourseMapTom.set('duration', [new Date(2015, 2, 19), new Date(2015, 4, 21)]);
+    studentCourseMapTom.set('platform', 'web');
+
+    // save all
+    studentCourseMapTom.save().then((response) => {
+        console.log(response)
+    });
+
+
+</script>
+</body>
+</html>

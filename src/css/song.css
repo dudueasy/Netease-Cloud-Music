@@ -60,12 +60,16 @@ body{
 .disc-container .disc{display: flex; justify-content: center; align-items: center; margin-top: 18vw; }
 .disc-container .ring{width: 72vw; } 
 .disc-container .light{width: 72vw; position: absolute; }
-.disc-container .cover{width: 45vw; position: absolute; border-radius: 50%;  
-  animation: circle 20s infinite linear; 
+.disc-container .cover{width: 45vw; position: absolute; border-radius: 50%;
+
   animation-play-state: paused;
+    webkit-animation:none;
 }
 .disc-container.playing .light,
 .disc-container.playing .cover{
+  -webkit-animation: circle 20s infinite linear;
+  -o-animation: circle 20s infinite linear;
+  animation: circle 20s infinite linear;
   animation-play-state: running;
 }
 

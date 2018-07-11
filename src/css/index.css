@@ -149,6 +149,10 @@ section.songs > .list {
   margin-top: 18px;
 }
 section.songs > .list > li > h3{
+  white-space:nowrap;
+  -ms-text-overflow: ellipsis;
+  text-overflow: ellipsis;
+  overflow: hidden;
   font-size: 17px;
 }
 section.songs > .list > li > p{

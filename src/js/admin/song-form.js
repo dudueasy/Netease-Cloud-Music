@@ -158,6 +158,7 @@
 
           // 向事件中心发布'create' 事件
           window.eventHub.emit('create', object)
+          alert('数据已保存')
         })
     }
     ,
@@ -171,7 +172,7 @@
           let object  = JSON.parse(string)
 
           window.eventHub.emit('update', object)
-          console.log('update is emited')
+          alert('数据已保存')
         })
     }
     ,

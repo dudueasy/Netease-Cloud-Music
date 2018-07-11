@@ -15,10 +15,8 @@ if (!port) {
 let server = http.createServer(function (request, response) {
   let parsedUrl = url.parse(request.url, true)
   let pathWithQuery = request.url
-  let queryString = ''
-  if (pathWithQuery.indexOf('?') >= 0) {
-    queryString = pathWithQuery.substring(pathWithQuery.indexOf('?'))
-  }
+
+
   let path = parsedUrl.pathname
   let query = parsedUrl.query
   let method = request.method
@@ -42,7 +40,7 @@ let server = http.createServer(function (request, response) {
     response.setHeader('Content-Type', 'text/html;charset=utf-8')
     response.setHeader('Access-Control-Allow-Origin', '*')
 
-    // get access to QiniuCloud
+    // getSongData access to QiniuCloud
     var config = getDBData('qiniu-key.json')
     config = JSON.parse(config)
 
